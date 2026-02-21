@@ -1,3 +1,6 @@
+"""
+this file is used to generate images
+"""
 import numpy as np
 from PIL import Image
 import fun1 as fun
@@ -8,4 +11,4 @@ if __name__ == "__main__":
     tab = fun.calculer(var.sys,var.sysv,var.long,var.haut,var.dt,var.t_max,var.res,var.i_sat,var.m,var.r,var.fixe)
     arr = np.array(tab, dtype=np.uint8)  # forme (h, w, 3)
     img = Image.fromarray(arr, mode="RGB")
-    img.save("test_1000x1000_sans_res_3.png")
+    img.save(nom)

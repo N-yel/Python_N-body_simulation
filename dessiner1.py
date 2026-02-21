@@ -1,10 +1,14 @@
+"""This file will use the matplotlib module to simulate the evolution of several planets whose information is contained in the var file.
+ The functions to simulate the evolution are in the fun file.
+ Comments are in French throughout the rest of the document.
+ """
 import var1 as var
 import fun1 as fun
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-
+# La fonction fun.actual prends dans la version actuelle du code des tableaux, de sorte a paralleliser le calcul de plusieurs simulations. Dans notre cas, on va actualiser un tableau de shape (1,1)
 continuer = np.array([True])
 save = [-1]
 colors0_1 = var.couleur/255
@@ -18,10 +22,10 @@ for _ in range(var.t_max):
     t+=var.dt
     #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
     traj.append(var.sys.copy())
-    #fun.actual met a jour les coordonées de sys
-    fun.actual(var.sys[None,None,:],var.sysv[None,None,:],var.sysa[None,None,:],t,var.dt,var.t_max,var.res,var.m,var.r,var.fixe,var.i_sat,save, continuer[None,None,:])
+    #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
+    fun.actual(var.sys[None,None,:],var.sysv[None,None,:],var.sysa[None,None,:],t,var.dt,var.res,var.m,var.r,var.fixe,var.i_sat,save, continuer[None,None,:])
 
-print(save)
+#print(save)
 traj_np = np.array(traj)
 
 #on doit avoir une shape (2,N,len(t)) pour afficher

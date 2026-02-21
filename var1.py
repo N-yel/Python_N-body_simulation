@@ -1,3 +1,7 @@
+"""
+This file is a dataset for our simulation.
+Comments are in French throughout the rest of the document.
+"""
 import numpy as np
 
 # dans ce code, on va mettre 3 planete fixe de même masse et même rayon, et un satellite, on va voir vers quelle planete il va
@@ -34,5 +38,3 @@ sysa = np.array([[0,0],[0,0],[0,0],[0,0]], dtype= float)
 fixe = np.array([True,True,True,False])
 #trace: contient un booléen pour chaque planete: si ce dernier est a true on affichera ses points précédents
 trace = [False,False,False,False]
-#chemin: contient l'ensemble des positions précédentes de chaque planete (liste de liste)
-chemin = [[],[],[],[]]
