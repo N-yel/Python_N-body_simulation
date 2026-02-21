@@ -1,0 +1,15 @@
+
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# On ne suit pas les images:
+*.png
+*.jpg
+*.gif
+
+# Relatif a Mac
+.DS_Store
