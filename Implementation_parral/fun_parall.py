@@ -3,7 +3,7 @@ This file contains all the functions that we will use for simulation.
 Comments are in French throughout the rest of the document.
 """
 import numpy as np
-import var1 as var
+import Implementation_parral.var1 as var
 from time import perf_counter
 
 def actual(tab_sys,tab_sysv,tab_sysa,t,dt,res,m,r,fixe,i_sat,save, tab_continuer):
@@ -37,7 +37,7 @@ def actual(tab_sys,tab_sysv,tab_sysa,t,dt,res,m,r,fixe,i_sat,save, tab_continuer
 
 
     rayons = r[...,:,None] + r[...,None,:]
-    mask1 = (d[...,:,:] > rayons) # si il y a une collision entre i et j, mask1[i][j] = False   mask1.shape = (n,n)
+    mask1 = (d[...,:,:] > rayons) # si il y a une collision entre i et j, mask1[i][j] = False   mask1.shape = (n,n) sans pour autant arreter la simulation, cela sert juste à éviter les divergences vers l'infini de la force lorsque le rayon tend vers 0
     mask2 = ~fixe[:,None]# si le i est fixe, alors \forall j mask2[i][j] = False
     # # lors du calcul de la force, on va multiplier par mask de sorte a ne pas calculer la force lorsqu'il y a un problème
     mask = mask1 & mask2
@@ -54,7 +54,6 @@ def actual(tab_sys,tab_sysv,tab_sysa,t,dt,res,m,r,fixe,i_sat,save, tab_continuer
 
 
         if(t <=1):
-            print(np.count_nonzero(~mask_continuer))
             #np.where(condition, if, else) va renoyer un tableau de la même shape que le tableau de booléen condition, qui contient la variable if dans les cases ou la condition est respectée, else sinon
             #donc tout les endroits ou on ne continue pas, on met argmax (vu qu'il y a a priori une seule collision a la fois, argmax va renvoyer le seul 1(True)), sinon on laisse save
             save[:] = np.where(~mask_continuer, -1,save)
@@ -63,7 +62,6 @@ def actual(tab_sys,tab_sysv,tab_sysa,t,dt,res,m,r,fixe,i_sat,save, tab_continuer
 
     tab_continuer[:] = tab_continuer & mask_continuer
     acc_tab =-var.G*(tab_continuer[...,None,None]*mask*m[None,:]*(1/d**3))[...,None]*diff
-    #print(acc_tab)
     tab_sysa[:] = np.sum(acc_tab, axis=-2) -res*tab_sysv
 
     # on actualise la vitesse en fonction de l'accélération
@@ -106,7 +104,6 @@ def creer_grille_sys_dense(sys, long, haut,i_sat):
     # np.broadcast_to va "rajouter des dimensions"
     tab_sys = np.broadcast_to(sys[None, None, :, :], (long, haut) + sys.shape).copy()
     placer_satellite(tab_sys,i_sat)
-    #print(tab_sys[1,42,i_sat])
     return tab_sys
 
 def creer_grille_indep(s,long,haut):

@@ -19,34 +19,36 @@ res = 0
 # convention : si i_sat = -1, alors il n'y a pas de satellite dans le sens ou on regarde l'évolution globale du système sans s'arreter si il y a une collision du satellite
 i_sat = 3
 
-p1 = models.Planete(pos=[centre[0]-100,centre[1]],
-                    vit=[0,0],
-                    acc=[0,0],
+p1 = models.Planete(pos=np.array([centre[0]-100,centre[1]],dtype=float),
+                    vit=np.array([0,0],dtype=float),
+                    acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
                     fixe=True,
                     couleur=(255,0,0))
 
-p2 = models.Planete(pos=[centre[0]+100,centre[1]],
-                    vit=[0,0],
-                    acc=[0,0],
+p2 = models.Planete(pos=np.array([centre[0]+100,centre[1]],dtype=float),
+                    vit=np.array([0,0],dtype=float),
+                    acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
                     fixe=True,
                     couleur=(0,255,0))
 
-p3 = models.Planete(pos=[centre[0],centre[1]],
-                    vit=[0,0],
-                    acc=[0,0],
+p3 = models.Planete(pos=np.array([centre[0],centre[1]],dtype=float),
+                    vit=np.array([0,0],dtype=float),
+                    acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
                     fixe=True,
                     couleur=(0,0,255))
 
-p4 = models.Planete(pos=[59,592],
-                    vit=[0,0],
-                    acc=[0,0],
+p4 = models.Planete(pos=np.array([59,592],dtype=float),
+                    vit=np.array([0,0],dtype=float),
+                    acc=np.array([0,0],dtype=float),
                     m=10,
                     r=10,
                     fixe=False,
                     couleur=(255,0,255))
+
+planetes = np.array([p1,p2,p3,p4])

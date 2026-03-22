@@ -3,8 +3,8 @@ this file is used to generate images
 """
 import numpy as np
 from PIL import Image
-import fun1 as fun
-import var1 as var
+import Implementation_parral.fun_parall as fun
+import Implementation_parral.var1 as var
 
 nom = "graphe_"+"i_sat = "+ str(var.i_sat) + "sysv = "+ str(var.sysv) +"_sysa = "+ str(var.sysa) +"_res = "+ str(var.res) +"_dt = "+ str(var.dt) +"_m = "+ str(var.m)+"_r = "+ str(var.r) +".png"
 if __name__ == "__main__":

@@ -2,8 +2,8 @@
  The functions to simulate the evolution are in the fun file.
  Comments are in French throughout the rest of the document.
  """
-import var1 as var
-import fun1 as fun
+import Implementation_parral.var1 as var
+import Implementation_parral.fun_parall as fun
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
