@@ -1,13 +1,12 @@
 import numpy as np
 import var_poo as var
+import models
 from time import perf_counter
 
-# fonction distance prend en argument deux listes de coordonées et renvoie la distance entre les deux (la norme quoi)
-def dist(c1,c2):
-    return np.linalg.norm(c1 - c2)
+update_list = np.vectorize (lambda planete : planete.update())
 
 
-def acc_tout(planetes,t,res,i_sat):
+def actual(planetes,t,res,i_sat):
     # sys.shape = (len(sys),2) : on stocke un tableau couples de deux coordonées, on pose ci-dessous n = nombre de planètes
     n = planetes.shape[0]
     save = None
@@ -19,12 +18,11 @@ def acc_tout(planetes,t,res,i_sat):
     
     # pour toutes les planètes du système, si elles ne sont pas fixes, on somme l'accélération liée aux autres planètes
     for k in range(n):
-        sumkx = 0
-        sumky = 0
+        sumk = np.array([0,0],dtype=float)
         if(not planetes[k].fixe):
             for i in range(n):
                 # d: distance entre la planète i et k
-                d = dist(planetes[i].pos,planetes[k].pos)
+                d = planetes[i].dist(planetes[k])
 
                 #cas particulier, la planète que l'on observe est le satelite, alors on sauvegarde la planète dans laquelle elle se crashe avec la variable save. On ne traite pas le cas ou il y a plusieurs collisions en même temps sachant qu'il est plutot improbable en vue de ce que l'on veut simuler
                 if (k == i_sat) and (i != i_sat):
@@ -41,22 +39,12 @@ def acc_tout(planetes,t,res,i_sat):
                 #si deux planètes autre que le satellite rentrent en collision, on n'arrète pas la simulation mais on n'augmentera pas l'acceleration pour éviter les départs vers l'infini (d -> 0 implique 1/d**3 -> \infty)
                 if k!=i and (d > planetes[k].r + planetes[i].r):
                     #on somme la composante de l'accélération selon toute les autre planètes et on soustrait un frottement fluide pour faire baisser artificiellement l'energie (a voir)
-                    sumkx+= planetes[i].m *var.G *(planetes[i].pos[0] - planetes[k].pos[0]) *(1/d**3) -res*planetes[k].vit[0]
-                    sumky+= planetes[i].m *var.G *(planetes[i].pos[1] - planetes[k].pos[1]) -res*planetes[k].vit[1]
-            planetes[k].acc = [sumkx,sumky]
+                    sumk += planetes[i].calcul_force(planetes[k],res)
+            planetes[k].acc = sumk
+
+    update_list(planetes)
     return save, continuer
 
-
-
-def actual (planetes,t,dt,res,i_sat):
-
-    save, continuer = acc_tout(planetes,t,res,i_sat)
-    for k in range(planetes.shape[0]):
-            # on actualise la vitesse en fonction de l'accélération
-        planetes[k].vit += dt *planetes[k].acc
-            # on actualise la position en fonction de la vitesse
-        planetes[k].vit += dt *planetes[k].acc
-    return save, continuer
 
 
 #renvoie la planète si il y en a une vers laquelle le satellite a aterri, sinon (42,42,42)

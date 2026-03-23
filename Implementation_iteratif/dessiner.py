@@ -8,7 +8,7 @@ continuer = True
 save = -1
 
 while continuer:
-    save, continuer = fun.actual(var.planetes,var.t,var.dt,var.res,var.i_sat)
+    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat)
     var.t+=var.dt
     #si la touche q est pressée, on quitte
     for event in pg.event.get():

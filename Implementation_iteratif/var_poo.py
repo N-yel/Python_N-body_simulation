@@ -24,6 +24,7 @@ p1 = models.Planete(pos=np.array([centre[0]-100,centre[1]],dtype=float),
                     acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
+                    dt=dt,
                     fixe=True,
                     couleur=(255,0,0))
 
@@ -32,6 +33,7 @@ p2 = models.Planete(pos=np.array([centre[0]+100,centre[1]],dtype=float),
                     acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
+                    dt=dt,
                     fixe=True,
                     couleur=(0,255,0))
 
@@ -40,7 +42,8 @@ p3 = models.Planete(pos=np.array([centre[0],centre[1]],dtype=float),
                     acc=np.array([0,0],dtype=float),
                     m=100,
                     r=10,
-                    fixe=True,
+                    dt=dt,
+                    fixe=False,
                     couleur=(0,0,255))
 
 p4 = models.Planete(pos=np.array([59,592],dtype=float),
@@ -48,6 +51,7 @@ p4 = models.Planete(pos=np.array([59,592],dtype=float),
                     acc=np.array([0,0],dtype=float),
                     m=10,
                     r=10,
+                    dt=dt,
                     fixe=False,
                     couleur=(255,0,255))
 
