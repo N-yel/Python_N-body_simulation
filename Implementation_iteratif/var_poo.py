@@ -17,7 +17,7 @@ dt = 1
 res = 0
 
 # convention : si i_sat = -1, alors il n'y a pas de satellite dans le sens ou on regarde l'évolution globale du système sans s'arreter si il y a une collision du satellite
-i_sat = -1
+i_sat = 3
 
 p1 = models.Planete(pos=np.array([centre[0]-100,centre[1]],dtype=float),
                     vit=np.array([0,0],dtype=float),

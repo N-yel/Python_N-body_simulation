@@ -9,9 +9,8 @@ continuer = True
 save = -1
 t=0
 
-get_pos = np.vectorize(lambda planete: planete.pos)
-
-
+def couleur_to_couleur01(rgb):
+    return (rgb[0]/255,rgb[1]/255,rgb[2]/255)
 
 traj = []
 for _ in range(var.t_max):
@@ -19,13 +18,15 @@ for _ in range(var.t_max):
         break
     t+=var.dt
     #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
-    traj.append(get_pos(var.planetes))
+    traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
     #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
     save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat)
 
 traj_np = np.array(traj)
-
+#on doit avoir une shape (2,N,len(t)) pour afficher
+traj_np = np.transpose(traj_np,(2,1,0))
 print(traj_np.shape)
+
 fig, axis = plt.subplots()
 
 axis.set_xlim([0,var.long])
@@ -38,7 +39,7 @@ points = []
 for i in range(len(var.planetes)):
     p, = axis.plot([], [], 'o',
                    markersize=var.planetes[i].r,
-                   color=var.planetes[i]/255)
+                   color=couleur_to_couleur01(var.planetes[i].couleur))
     points.append(p)
 
 def update_data(frame):
