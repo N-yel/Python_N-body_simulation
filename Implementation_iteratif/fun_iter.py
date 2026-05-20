@@ -1,19 +1,24 @@
 import numpy as np
 import var_poo as var
 import models
+import csv
 from time import perf_counter
+from pathlib import Path
+from PIL import Image
+
+
+
 
 update_list = np.vectorize (lambda planete : planete.update())
 
-
-def actual(planetes,t,res,i_sat):
+def actual(planetes,t,t_max,res,i_sat):
     # sys.shape = (len(sys),2) : on stocke un tableau couples de deux coordonées, on pose ci-dessous n = nombre de planètes
     n = planetes.shape[0]
-    save = None
+    save = -2
     continuer = True
 
     #si cela fait trop longtemps, alors on renvoie (42,42,42) (une sorte de gris)
-    if t>=9999:
+    if t>=t_max:
         return -2 , False
     
     # pour toutes les planètes du système, si elles ne sont pas fixes, on somme l'accélération liée aux autres planètes
@@ -48,32 +53,80 @@ def actual(planetes,t,res,i_sat):
 
 
 #renvoie la planète si il y en a une vers laquelle le satellite a aterri, sinon (42,42,42)
-def crash(sys,sysv,dt,res,m,r,fixe,i_sat):
+def crash(planetes,res,i_sat):
     t = 0
+    t_max = var.t_max
     continuer = True
-    save = None
-    while continuer:
-        save, continuer = actual(sys,sysv,t,dt,res,m,r,fixe,i_sat)
-        # print(f"positions = {sys}")
-        # print(f"vitesses = {sysv}")
-        t+=dt
+    save = -2
+    while t < var.t_max and continuer:
+        save, continuer = actual(planetes,t,t_max,res,i_sat)
+        #afficher la position du sattelite
+        #print(planetes[var.i_sat].pos)
+        #afficher la position de toutes les planètes
+        #print([planete.pos for planete in planetes])
+        t+=planetes[0].dt
     # print(f"la couleur censé être renvoyé sera {var.couleur[save]}")
     return save
 
 
 
+#va servir à stocker le temps mis par chaque itération
+def get_prochain_fichier():
+    dossier = Path("suivi_temps")
+    dossier.mkdir(exist_ok=True)  # Crée le dossier s'il n'existe pas
+    i = 0
+    while (dossier / f"temps_iterations{i}.csv").exists():
+        i += 1
+    
+    return dossier / f"temps_iterations{i}.csv",i
+
+
+def get_fichier_image(i):
+    return Path(f"img_{i}.png")
+
+
+
+
+
 #va renvoyer un tableau de dimension (long,haut) avec la couleur de la planète vers laquelle le satellite d'indice i_sat va atterir en fonction de sa position
-def calculer(sys,sysv,long,haut,dt,res,i_sat,m,r,fixe):
+def calculer(long,haut,planetes,res,i_sat):
     start0 = perf_counter()
     #img: va stocker en la couleur en fct des conditionss initiales
-    img = [[(0,0,0) for _ in range(haut)] for _ in range(long)]
-    for i in range(long): #on est censé mettre long ici
-        start = perf_counter()
-        for j in range(haut): # on est censé mettre haut ici si on veut tt le tableau
-            copy_pos = sys.copy()
-            copy_pos[i_sat] = [i,j]
-            img[i][j] = var.couleur[crash(copy_pos,sysv.copy(),dt,res,m,r,fixe,i_sat)]
-            #print(f"le pixel dans l'image sera {img[i][j]}")
-        print(i,(perf_counter() - start)) 
+    save = np.full((long,haut),-1,dtype = int)
+    
+    fichier, idx = get_prochain_fichier()
+    fichier_img = get_fichier_image(idx)
+
+    fichier_vide = not fichier.exists() or fichier.stat().st_size == 0
+
+    with open(fichier, "a", newline="") as f:
+        f.write(f"# long={long}, haut={haut}, res={res}, i_sat={i_sat}\n")
+        for k in range(len(planetes)):
+            f.write(f"# planete_{k}: {planetes[k]}\n")
+
+        writer = csv.writer(f)
+
+        # Écrire l'en-tête uniquement si le fichier est vide
+        if fichier_vide:
+            writer.writerow(["iteration_i", "temps_secondes"])
+
+        for i in range(long):
+            start = perf_counter()
+            for j in range(haut):
+                planetes_act = planetes.copy()
+                planetes_act[i_sat].pos = np.array([i,j],dtype=float)
+
+                save[i][j] = crash(planetes_act,res,i_sat)
+                del planetes_act #je ne suis pas sur de l'utilité de cette commande. Mais dans le doute
+            duree = perf_counter() - start
+            writer.writerow([i, round(duree, 4)])  # stockage CSV
+            f.flush()  # force l'écriture immédiate, utile si le programme plante
+
+            #sauvegarde progressive de l'image
+            arr = np.array(var.couleur[save], dtype=np.uint8)
+            img = Image.fromarray(arr, mode="RGB")
+            img.save(fichier_img)
+
+            print(i,duree)
     print(f"fini en {round((perf_counter() - start0)//60)} min et {round((perf_counter() - start0)%60)} s")
-    return img
+    return var.couleur[save]

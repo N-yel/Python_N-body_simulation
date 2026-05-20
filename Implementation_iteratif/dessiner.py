@@ -20,12 +20,14 @@ for _ in range(var.t_max):
     #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
     traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
     #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
-    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat)
+    save, continuer = fun.actual(var.planetes,var.t,var.t_max,var.res,var.i_sat)
+
+# afficher la couleur de la planète vers laquelle le satellite est rentré en collision
+print(save)
 
 traj_np = np.array(traj)
 #on doit avoir une shape (2,N,len(t)) pour afficher
 traj_np = np.transpose(traj_np,(2,1,0))
-print(traj_np.shape)
 
 fig, axis = plt.subplots()
 
@@ -39,7 +41,7 @@ points = []
 for i in range(len(var.planetes)):
     p, = axis.plot([], [], 'o',
                    markersize=var.planetes[i].r,
-                   color=couleur_to_couleur01(var.planetes[i].couleur))
+                   color=couleur_to_couleur01(var.couleur[i]))
     points.append(p)
 
 def update_data(frame):

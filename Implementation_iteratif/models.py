@@ -2,7 +2,7 @@ import numpy as np
 import var_poo as var
 
 class Planete :
-    def __init__(self,pos,vit,acc,m,r,dt,fixe,couleur):
+    def __init__(self,pos,vit,acc,m,r,dt,fixe):
         self.pos = pos
         self.vit = vit
         self.acc = acc
@@ -10,8 +10,11 @@ class Planete :
         self.r = r
         self.dt = dt
         self.fixe = fixe
-        self.couleur = couleur
     
+    # renvoie en texte la représentation d'une planète (utile pour le fichier csv)
+    def __repr__(self):
+        return f"pos={self.pos}, vit={self.vit}, m={self.m}, r={self.r}, dt={self.dt}, fixe={self.fixe}"
+
     def dist(self,p):
         return np.linalg.norm(self.pos - p.pos)
 
