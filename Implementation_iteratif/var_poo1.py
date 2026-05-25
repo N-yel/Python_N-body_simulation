@@ -1,5 +1,5 @@
 import numpy as np
-import models
+import models as models
 
 # dans ce code, on va mettre 3 planete fixe de même masse et même rayon, et un satellite, on va voir vers quelle planete il va
 long = 400
@@ -14,7 +14,7 @@ t_max = 5000
 # petite variation de temps qui augmente la précision mais plus il est petit, plus l'algo demande du calcul
 dt = 1
 # res représente le coef de frottement: plus il est faible, plus il y aura conservation de l'énergie
-res = 0
+res = 1e-3
 
 # convention : si i_sat = -1, alors il n'y a pas de satellite dans le sens ou on regarde l'évolution globale du système sans s'arreter si il y a une collision du satellite
 i_sat = 3

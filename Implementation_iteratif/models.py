@@ -1,5 +1,4 @@
 import numpy as np
-import var_poo as var
 
 class Planete :
     def __init__(self,pos,vit,acc,m,r,dt,fixe):
@@ -20,13 +19,13 @@ class Planete :
 
 
 
-    def calcul_force(self,p,res):
+    def calcul_force(self,p,res,G):
         d = self.dist(p)
         if d <= self.r + p.r:
             return [0,0]
 
-        Fx = self.m *var.G *(self.pos[0] - p.pos[0])*(1/d**3) -res*p.vit[0]
-        Fy = self.m *var.G *(self.pos[1] - p.pos[1])*(1/d**3) -res*p.vit[1]
+        Fx = self.m *G *(self.pos[0] - p.pos[0])*(1/d**3) -res*p.vit[0]
+        Fy = self.m *G *(self.pos[1] - p.pos[1])*(1/d**3) -res*p.vit[1]
         return np.array([Fx,Fy])
         
 

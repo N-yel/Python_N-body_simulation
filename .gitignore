@@ -11,5 +11,8 @@ __pycache__/
 *.jpg
 *.gif
 
+# fichiers csv
+*.csv
+
 # Relatif a Mac
 .DS_Store

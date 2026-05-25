@@ -1,25 +1,20 @@
 import numpy as np
-import var_poo as var
-import models
+import var_poo2 as var
 import csv
+import copy
 from time import perf_counter
 from pathlib import Path
 from PIL import Image
 
 
 
-
 update_list = np.vectorize (lambda planete : planete.update())
 
-def actual(planetes,t,t_max,res,i_sat):
+def actual(planetes,t,res,i_sat):
     # sys.shape = (len(sys),2) : on stocke un tableau couples de deux coordonées, on pose ci-dessous n = nombre de planètes
     n = planetes.shape[0]
-    save = -2
+    save = -1
     continuer = True
-
-    #si cela fait trop longtemps, alors on renvoie (42,42,42) (une sorte de gris)
-    if t>=t_max:
-        return -2 , False
     
     # pour toutes les planètes du système, si elles ne sont pas fixes, on somme l'accélération liée aux autres planètes
     for k in range(n):
@@ -29,7 +24,8 @@ def actual(planetes,t,t_max,res,i_sat):
                 # d: distance entre la planète i et k
                 d = planetes[i].dist(planetes[k])
 
-                #cas particulier, la planète que l'on observe est le satelite, alors on sauvegarde la planète dans laquelle elle se crashe avec la variable save. On ne traite pas le cas ou il y a plusieurs collisions en même temps sachant qu'il est plutot improbable en vue de ce que l'on veut simuler
+                #cas particulier, la planète que l'on observe est le satelite, alors on sauvegarde la planète dans laquelle elle se crashe avec la variable save.
+                #  On ne traite pas le cas ou il y a plusieurs collisions en même temps sachant qu'il est plutot improbable en vue de ce que l'on veut simuler
                 if (k == i_sat) and (i != i_sat):
                     if d<= planetes[i].r + planetes[i_sat].r:
                         #si la position initiale a laquelle on lache le satelite est dans une des planètes, alors la couleur renvoyée est noire
@@ -44,7 +40,7 @@ def actual(planetes,t,t_max,res,i_sat):
                 #si deux planètes autre que le satellite rentrent en collision, on n'arrète pas la simulation mais on n'augmentera pas l'acceleration pour éviter les départs vers l'infini (d -> 0 implique 1/d**3 -> \infty)
                 if k!=i and (d > planetes[k].r + planetes[i].r):
                     #on somme la composante de l'accélération selon toute les autre planètes et on soustrait un frottement fluide pour faire baisser artificiellement l'energie (a voir)
-                    sumk += planetes[i].calcul_force(planetes[k],res)
+                    sumk += planetes[i].calcul_force(planetes[k],res,var.G)
             planetes[k].acc = sumk
 
     update_list(planetes)
@@ -55,11 +51,10 @@ def actual(planetes,t,t_max,res,i_sat):
 #renvoie la planète si il y en a une vers laquelle le satellite a aterri, sinon (42,42,42)
 def crash(planetes,res,i_sat):
     t = 0
-    t_max = var.t_max
     continuer = True
     save = -2
     while t < var.t_max and continuer:
-        save, continuer = actual(planetes,t,t_max,res,i_sat)
+        save, continuer = actual(planetes,t,res,i_sat)
         #afficher la position du sattelite
         #print(planetes[var.i_sat].pos)
         #afficher la position de toutes les planètes
@@ -92,7 +87,7 @@ def get_fichier_image(i):
 def calculer(long,haut,planetes,res,i_sat):
     start0 = perf_counter()
     #img: va stocker en la couleur en fct des conditionss initiales
-    save = np.full((long,haut),-1,dtype = int)
+    save = np.full((long,haut),-2,dtype = int)
     
     fichier, idx = get_prochain_fichier()
     fichier_img = get_fichier_image(idx)
@@ -113,7 +108,8 @@ def calculer(long,haut,planetes,res,i_sat):
         for i in range(long):
             start = perf_counter()
             for j in range(haut):
-                planetes_act = planetes.copy()
+                #Calcul de la collision
+                planetes_act = copy.deepcopy(planetes)
                 planetes_act[i_sat].pos = np.array([i,j],dtype=float)
 
                 save[i][j] = crash(planetes_act,res,i_sat)
@@ -129,4 +125,6 @@ def calculer(long,haut,planetes,res,i_sat):
 
             print(i,duree)
     print(f"fini en {round((perf_counter() - start0)//60)} min et {round((perf_counter() - start0)%60)} s")
-    return var.couleur[save]
+
+
+    

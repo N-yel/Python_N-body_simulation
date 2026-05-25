@@ -121,26 +121,6 @@ def creer_grille_indep(s,long,haut):
 
 #va renvoyer un tableau de dimension (long,haut) avec la couleur de la planète vers laquelle le satellite d'indice i_sat va atterir en fonction de sa position
 def calculer(sys,sysv,long,haut,dt,t_max,res,i_sat,m,r,fixe):
-    """
-    Fonction très lourde, peut mettre plusieures heures à s'executer selon la taille du tableau, tmax, et dt.
-    La fonction calculer simule l’évolution temporelle d’un satellite placé initialement en chaque point d’une matrice (long x haut), et détermine pour chaque position s’il entre en collision avec une planète ou reste en orbite.
-    Elle renvoie une matrice indiquant le résultat final de chaque trajectoire.
-    Arguments:
-        sys: np.array, dtype=float, shape=(N,2) système initial
-        sysv: np.array, dtype=float, shape=(N,2)
-        long: int
-        haut: int
-        dt: float
-        t_max: float
-        res: float
-        i_sat: int correspond à l'indice du satellite, si on veut simuler un système sans satellite, on le met à -1.
-        m: np.array, dtype=float, shape=(N) va stocker la masse de chacune des planètes, elle ne change pas d'un point a l'autre de la matrice (long,large)
-        r: np.array, dtype=float, shape=(N) va stocker le rayon de chacune des planètes, il ne change pas d'un point a l'autre de la matrice (long,large)
-        fixe: np.array, dtype=bool, shape =(N) va stocker si l'on actualise la position de la i-ème planète ou pas. Si fixe[i]==True, alors on ne modifiera ni sa vitesse, ni sa position.
-    Returns:
-        var.couleur[save]: np.array, dtype=int, shape=(long,haut,3) renvoie un tableau qui, pour chaque case (i,j), renvoie la couleur sous format RGB de la planète vers lequel le satellite est rentré en collision.
-        Si ne rentre pas en collision avant tmax, alors on renvoie (42,42,42)
-    """
     t=0
     start0 = perf_counter()
 

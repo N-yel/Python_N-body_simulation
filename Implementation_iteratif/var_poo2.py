@@ -1,51 +1,55 @@
 import numpy as np
-import models
+import models as models
 
-# dans ce code, on va mettre 3 planete fixe de même masse et même rayon, et un satellite, on va voir vers quelle planete il va
 long = 1000
 haut = 1000
-centre = [long/2,haut/2]
+centre = [long/2, haut/2]
 
-# constante gravitationelle (je pense qu'on s'en fiche de la valeur)
-G = 6.7e-11
+G = 6.674e-11 # en m^3 kg^-1 s^-2
+
+#1px = 1000 km = 1e6 m
+# 1 unité de temps = 1h = 3600 s
+G = G*(3600**2)/(1e6**3)
+
 
 t = 0
-t_max = 5000
-# petite variation de temps qui augmente la précision mais plus il est petit, plus l'algo demande du calcul
+t_max = 10000
 dt = 1
-# res représente le coef de frottement: plus il est faible, plus il y aura conservation de l'énergie
 res = 0
 
-# convention : si i_sat = -1, alors il n'y a pas de satellite dans le sens ou on regarde l'évolution globale du système sans s'arreter si il y a une collision du satellite
-i_sat = -1
+# Pas de satellite
+i_sat = 1
 
-couleur = np.array( [(255,0,0),(0,255,0),(0,0,255),(255,0,255),(255,255,0),(0,255,255),(42,42,42),(0,0,0)], dtype = int)
+couleur = np.array([(255,0,0),(0,255,0),(0,0,255),(255,0,255),(255,255,0),(0,255,255),(42,42,42),(0,0,0)], dtype=int)
 
-distance_tl = 234.3
+distance_tl = 384.4
+terre = models.Planete(pos=np.array([centre[0], centre[1]], dtype=float),
+                       vit=np.array([0, 0], dtype=float),
+                       acc=np.array([0, 0], dtype=float),
+                       m=5.972e24,
+                       r=6,
+                       dt=dt,
+                       fixe=True)
 
-terre = models.Planete(pos=np.array([centre[0],centre[1]],dtype=float),
-                    vit=np.array([0,0],dtype=float),
+
+lune = models.Planete(pos=np.array([centre[0] + distance_tl, centre[1]], dtype=float),
+                      vit=np.array([0, np.sqrt(G*terre.m/384)], dtype=float),
+                      acc=np.array([0, 0], dtype=float),
+                      m=7.35e22,
+                      r=1.7,
+                      dt=dt,
+                      fixe=False)
+
+p2 = models.Planete(pos=np.array([180,386],dtype=float),
+                    vit=np.array([-20,10],dtype=float),
                     acc=np.array([0,0],dtype=float),
-                    m=5.972e24,
-                    r=65/2,
-                    dt=dt,
-                    fixe=True)
-
-lune = models.Planete(pos=np.array([centre[0]+distance_tl,centre[1]],dtype=float),
-                    vit=np.array([np.sqrt(G*terre.m/(distance_tl)),0],dtype=float),
-                    acc=np.array([0,0],dtype=float),
-                    m=7.35e22,
-                    r=10.18/2,
+                    m=50,
+                    r=2,
                     dt=dt,
                     fixe=False)
-
-sat = models.Planete(pos=np.array([centre[0],centre[1]],dtype=float),
-                    vit=np.array([0,0],dtype=float),
-                    acc=np.array([0,0],dtype=float),
-                    m=100,
-                    r=10,
-                    dt=dt,
-                    fixe=True)
+planetes = np.array([terre, lune])
 
 
-planetes = np.array([terre,lune])
+#on remarque que la période orbitale de la lune (temps qu'elle met à faire le tour de la terre ≈ 27 jour = 24*27 h) est correcte.
+
+
