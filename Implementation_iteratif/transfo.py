@@ -1,6 +1,11 @@
 import numpy as np
-import fun_iter as fun
-import var_poo2 as var
-
+from config import*
 if __name__ == "__main__":
-    fun.calculer(var.long, var.haut, var.planetes, var.res, var.i_sat)
+    fun.calculer(var.long,
+                 var.haut,
+                 var.planetes,
+                 var.res,
+                 var.i_sat,
+                 var.G,
+                 var.t_max,
+                 var.couleur)

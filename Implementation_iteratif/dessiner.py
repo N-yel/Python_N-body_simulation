@@ -1,5 +1,4 @@
-import var_poo2 as var
-import fun_iter as fun
+from config import*
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -13,14 +12,14 @@ def couleur_to_couleur01(rgb):
     return (rgb[0]/255,rgb[1]/255,rgb[2]/255)
 
 traj = []
-for _ in range(var.t_max):
+for _ in range(24*27):
     if not continuer:
         break
     t+=var.dt
     #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
     traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
     #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
-    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat)
+    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G)
     #print(var.planetes[1].pos)
 
 # afficher la couleur de la planète vers laquelle le satellite est rentré en collision
@@ -79,5 +78,5 @@ animation = FuncAnimation(
     interval = 25,
     )
 
-#animation.save("nom.gif")
+#animation.save("simulation_terre_lune.gif", writer="pillow")
 plt.show()
