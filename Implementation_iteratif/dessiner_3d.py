@@ -24,7 +24,7 @@ for _ in range(var.t_max):
 #print(save)
 
 traj_np = np.array(traj)
-#on doit avoir une shape (2,N,len(t)) pour afficher
+#on doit avoir une shape (3,N,len(t)) pour afficher
 traj_np = np.transpose(traj_np,(2,1,0))
 
 
@@ -44,7 +44,7 @@ points = []
 traces = []
 for i in range(traj_np.shape[1]):
     p, = ax.plot([], [],[], 'o',
-                markersize=np.log(var.planetes[i].r),
+                markersize=np.log10(var.planetes[i].r),
                 color= 'blue')
     points.append(p)
     trace, = ax.plot([], [],[], '-',

@@ -15,8 +15,9 @@ G = G*((3600*24*10)**2)/((1e3)**3)
 
 
 t = 0
-t_max = 10000
-dt = 1
+t_max = 7305
+#pour que le système solaire soit stable, il faut un pas de temps super précis
+dt = 0.1
 res = 0
 
 # Pas de satellite
