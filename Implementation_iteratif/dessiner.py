@@ -12,7 +12,7 @@ def couleur_to_couleur01(rgb):
     return (rgb[0]/255,rgb[1]/255,rgb[2]/255)
 
 traj = []
-for _ in range(24*27):
+for _ in range(var.t_max):
     if not continuer:
         break
     t+=var.dt
