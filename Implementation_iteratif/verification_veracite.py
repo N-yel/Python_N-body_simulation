@@ -5,8 +5,10 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import copy
 import var_poo3_leapfrog as var
 import fun_iter_leapfrog as fun
+import pandas as pd
 
 
 def extraire(chemin):
@@ -27,13 +29,8 @@ def extraire(chemin):
 
 
 dossier = Path("data_solar_system") / Path("200_ans_solar_system_helio")
-
 fichiers = sorted(dossier.iterdir())  # ordre alphabétique
-
-
 donnees_planetes = [extraire(chemin) for chemin in fichiers if chemin.suffix == ".txt"]
-#donnees_planetes = [extraire(dossier / "soleil.txt")]
-
 donnees_planetes = np.array(donnees_planetes)
 
 #print(donnees_planetes.shape)
@@ -42,36 +39,45 @@ donnees_planetes = np.array(donnees_planetes)
 vrais_rayons = np.array([71492,3396,2440,24766,60268,695700,6378,25559,6051])
 log_rayons = np.log10(vrais_rayons)
 
+copie_planete = copy.deepcopy(var.planetes)
 
 
-
-
-continuer = True
-save = -1
-t=0
-
-traj = []
-while(t <= var.t_max):
-    if not continuer:
-        break
-    t+=var.dt
-    #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
-    if round(t,3) % 1 == 0:
-        traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
-    #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
-    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G)
-    #print(var.planetes[1].pos)
+def calcul_traj(dt):
+    var.planetes = copy.deepcopy(copie_planete)
+    continuer = True
+    t=0
+    var.dt = dt
+    traj = []
+    while(t < var.t_max):
+        if not continuer:
+            break
+        t+=var.dt
+        #on ajoute la valeur dans la liste que si t est entier
+        if round(t,5) % 1 == 0:
+            traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
+        #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
+        _, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G)
+    return np.array(traj)
 
 # afficher la couleur de la planète vers laquelle le satellite est rentré en collision
 #print(save)
 
-traj_np = np.array(traj)
+# donnees_planetes = np.transpose(donnees_planetes,(1,0,2))
 
 
-# #print(f"shape traj_np = {traj_np.shape} et shape donnees_planetes = {donnees_planetes.shape}")
-# erreur = abs(traj_np - donnees_planetes)
-# print(erreur[:3])
+# #print(f"shape traj_np = {traj_np_01.shape} et shape donnees_planetes = {donnees_planetes.shape}")
+# #les deux tableaux sont de shape (7305,9,3)
+# difference = np.linalg.norm(calcul_traj(var.dt) - donnees_planetes, axis=-1)
+# moyenne =difference.mean(axis=-1)
 
+# # Création du DataFrame avec numérotation t
+# df = pd.DataFrame({
+#     't': range(0, 7305),
+#     'moyenne': moyenne
+# })
+
+# # Export en CSV
+# df.to_csv('Erreur_moyenne_dt=1.csv', index=False)
 
 """Visualisation"""
 
@@ -79,7 +85,7 @@ traj_np = np.array(traj)
 donnees_planetes = np.transpose(donnees_planetes,(2,0,1))
 
 #on doit avoir une shape (3,N,len(t)) pour afficher
-traj_np = np.transpose(traj_np,(2,1,0))
+traj_np = np.transpose(calcul_traj(var.dt),(2,1,0))
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')

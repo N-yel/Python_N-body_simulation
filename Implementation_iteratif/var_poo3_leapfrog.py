@@ -99,4 +99,4 @@ neptune = models.Planete(pos=np.array([-3.038367923974093E+09,-3.365080680705532
                        fixe=False)
 
 
-planetes = np.array([soleil,mercure,venus,terre,mars,jupiter,saturne,uranus,neptune])
+planetes = np.array([jupiter,mars,mercure,neptune,saturne,soleil,terre,uranus,venus])
