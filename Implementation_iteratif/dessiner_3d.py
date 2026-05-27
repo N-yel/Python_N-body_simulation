@@ -1,15 +1,13 @@
-from config import*
 import numpy as np
+from config import*
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation
 
 
 continuer = True
 save = -1
 t=0
-
-def couleur_to_couleur01(rgb):
-    return (rgb[0]/255,rgb[1]/255,rgb[2]/255)
 
 traj = []
 for _ in range(var.t_max):
@@ -30,27 +28,29 @@ traj_np = np.array(traj)
 traj_np = np.transpose(traj_np,(2,1,0))
 
 
+"""Tracé des données"""
 
-fig, axis = plt.subplots()
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
-axis.set_xlim([-var.long/2,var.long/2])
-axis.set_ylim([-var.haut/2,var.haut/2])
+ax.set_xlim(-var.long/2,var.long/2)
+ax.set_ylim(-var.large/2,var.large/2)
+ax.set_zlim(-var.profond/2,var.profond/2)
 
-axis.set_title("Simulation N-corps")
-axis.set_aspect("equal")
+ax.set_title("Simulation N-corps")
+ax.set_aspect("equal")
 
 points = []
 traces = []
-for i in range(len(var.planetes)):
-    couleur = couleur_to_couleur01(var.couleur[i])
-    p, = axis.plot([], [], 'o',
-                   markersize=var.planetes[i].r,
-                   color= couleur)
+for i in range(traj_np.shape[1]):
+    p, = ax.plot([], [],[], 'o',
+                markersize=np.log(var.planetes[i].r),
+                color= 'blue')
     points.append(p)
-    trace, = axis.plot([], [], '-',
-                       linewidth=1,
-                       alpha=0.5,         # transparence de la trace
-                       color=couleur)
+    trace, = ax.plot([], [],[], '-',
+                        linewidth=1,
+                        alpha=0.5,         # transparence de la trace
+                        color='blue')
     traces.append(trace)
 
 
@@ -60,13 +60,15 @@ for i in range(len(var.planetes)):
 def update_data(frame):
     #dans anim.set_data, on doit avoir un tab de shape (2,N,len(t))
     for i in range(len(points)):
-        points[i].set_data(
-            [traj_np[0, i, frame]],
-            [traj_np[1, i, frame]]
+        points[i].set_data_3d(
+            [traj_np[0,i, frame]],
+            [traj_np[1,i, frame]],
+            [traj_np[2,i, frame]]
         )
-        traces[i].set_data(
+        traces[i].set_data_3d(
             traj_np[0, i, :frame],
-            traj_np[1, i, :frame]
+            traj_np[1, i, :frame],
+            traj_np[2, i, :frame]
         )
     return points + traces
 
@@ -74,9 +76,8 @@ def update_data(frame):
 animation = FuncAnimation(
     fig=fig,
     func= update_data,
-    frames= len(traj),
+    frames= range(1,traj_np.shape[2]),
     interval = 25,
     )
 
-#animation.save("simulation_terre_lune.gif", writer="pillow")
 plt.show()

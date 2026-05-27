@@ -3,7 +3,6 @@ import models_leapfrog as models
 
 long = 1000
 haut = 1000
-centre = [long/2, haut/2]
 
 G = 6.674e-11 # en m^3 kg^-1 s^-2
 
@@ -23,7 +22,7 @@ i_sat = 1
 couleur = np.array([(255,0,0),(0,255,0),(0,0,255),(255,0,255),(255,255,0),(0,255,255),(42,42,42),(0,0,0)], dtype=int)
 
 distance_tl = 384.4
-terre = models.Planete(pos=np.array([centre[0], centre[1]], dtype=float),
+terre = models.Planete(pos=np.array([0, 0], dtype=float),
                        vit=np.array([0, 0], dtype=float),
                        acc=np.array([0, 0], dtype=float),
                        m=5.972e24,
@@ -32,7 +31,7 @@ terre = models.Planete(pos=np.array([centre[0], centre[1]], dtype=float),
                        fixe=False)
 
 
-lune = models.Planete(pos=np.array([centre[0] + distance_tl, centre[1]], dtype=float),
+lune = models.Planete(pos=np.array([distance_tl, 0], dtype=float),
                       vit=np.array([0, np.sqrt(G*terre.m/384)], dtype=float),
                       acc=np.array([0, 0], dtype=float),
                       m=7.35e22,

@@ -1,11 +1,13 @@
 import numpy as np
 
+#cette classe marche aussi en 3d
+
 class Planete :
     def __init__(self,pos,vit,acc,m,r,dt,fixe):
         self.pos = pos
         self.vit = vit
         self.acc = acc
-        self.acc_old = np.array([0,0],dtype=float)
+        self.acc_old = np.array([0 for _ in pos],dtype=float)
         self.m = m
         self.r = r
         self.dt = dt
@@ -25,9 +27,10 @@ class Planete :
         if d <= self.r + p.r:
             return [0,0]
 
-        Fx = self.m *G *(self.pos[0] - p.pos[0])*(1/d**3) -res*p.vit[0]
-        Fy = self.m *G *(self.pos[1] - p.pos[1])*(1/d**3) -res*p.vit[1]
-        return np.array([Fx,Fy])
+        F = []
+        for i in range(len(self.pos)):
+            F.append(self.m *G *(self.pos[i] - p.pos[i])*(1/d**3) -res*p.vit[i])
+        return np.array(F)
         
 
     def update_pos(self):

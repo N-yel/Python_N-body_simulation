@@ -24,7 +24,7 @@ def actual(planetes,t,res,i_sat,G):
 
     # pour toutes les planètes du système, si elles ne sont pas fixes, on somme l'accélération liée aux autres planètes
     for k in range(n):
-        sumk = np.array([0,0],dtype=float)
+        sumk = np.array([0 for _ in range(len(planetes[0].pos))],dtype=float)
         if(not planetes[k].fixe):
             for i in range(n):
                 if k!=i:
