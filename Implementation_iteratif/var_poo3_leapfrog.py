@@ -2,9 +2,9 @@ import numpy as np
 import models_leapfrog as models
 
 """Ce fichier sera en 3d"""
-long = 1e9
-large = 1e9
-profond = 1e9
+long = 5e9
+large = 5e9
+profond = 5e9
 
 G = 6.674e-11 # en m^3 kg^-1 s^-2
 
@@ -16,7 +16,7 @@ G = G*((3600*24*10)**2)/((1e3)**3)
 
 t = 0
 t_max = 7305
-#pour que le système solaire soit stable, il faut un pas de temps super précis
+#pour que le système solaire soit stable, il faut un pas de temps de l'ordre de 0.1
 dt = 0.1
 res = 0
 

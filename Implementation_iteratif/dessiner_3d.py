@@ -37,6 +37,11 @@ ax.set_xlim(-var.long/2,var.long/2)
 ax.set_ylim(-var.large/2,var.large/2)
 ax.set_zlim(-var.profond/2,var.profond/2)
 
+ax.set_xlabel("x (km)")
+ax.set_ylabel("y (km)")
+ax.set_zlabel("z (km)")
+
+
 ax.set_title("Simulation N-corps")
 ax.set_aspect("equal")
 

@@ -39,9 +39,9 @@ for i in range(len(fichiers)):
 
 
 # Mise en forme
-plt.xlabel("t")
-plt.ylabel("Erreur moyenne")
+plt.xlabel("t (10 jours)")
+plt.ylabel("Erreur moyenne (km)")
 plt.title("Erreur moyenne en fonction du temps")
 plt.legend()
-plt.savefig("graphique_erreur_moyenne_systeme_solaire.png")
+#plt.savefig("graphique_erreur_moyenne_par_dist_systeme_solaire.png")
 plt.show()

@@ -25,13 +25,15 @@ class Planete :
     def calcul_force(self,p,res,G):
         d = self.dist(p)
         if d <= self.r + p.r:
-            return [0,0]
+            return np.array([0 for _ in range(len(self.pos))])
 
         F = []
         for i in range(len(self.pos)):
-            F.append(self.m *G *(self.pos[i] - p.pos[i])*(1/d**3) -res*p.vit[i])
+            F.append(self.m *G *(self.pos[i] - p.pos[i])*(1/d**3) -res*self.vit[i])
         return np.array(F)
         
+
+
 
     def update_pos(self):
         self.pos += self.vit * self.dt + 0.5 * self.acc * self.dt**2

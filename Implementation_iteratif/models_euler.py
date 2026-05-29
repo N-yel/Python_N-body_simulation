@@ -24,8 +24,8 @@ class Planete :
         if d <= self.r + p.r:
             return [0,0]
 
-        Fx = self.m *G *(self.pos[0] - p.pos[0])*(1/d**3) -res*p.vit[0]
-        Fy = self.m *G *(self.pos[1] - p.pos[1])*(1/d**3) -res*p.vit[1]
+        Fx = self.m *G *(self.pos[0] - p.pos[0])*(1/d**3) -res*self.vit[0]
+        Fy = self.m *G *(self.pos[1] - p.pos[1])*(1/d**3) -res*self.vit[1]
         return np.array([Fx,Fy])
         
 

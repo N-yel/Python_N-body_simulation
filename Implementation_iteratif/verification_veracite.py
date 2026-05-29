@@ -59,16 +59,23 @@ def calcul_traj(dt):
         _, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G)
     return np.array(traj)
 
-# afficher la couleur de la planète vers laquelle le satellite est rentré en collision
-#print(save)
 
+
+"""Norme de la différence par rapport à la distance au soleil"""
 # donnees_planetes = np.transpose(donnees_planetes,(1,0,2))
-
-
 # #print(f"shape traj_np = {traj_np_01.shape} et shape donnees_planetes = {donnees_planetes.shape}")
 # #les deux tableaux sont de shape (7305,9,3)
+
 # difference = np.linalg.norm(calcul_traj(var.dt) - donnees_planetes, axis=-1)
-# moyenne =difference.mean(axis=-1)
+# #différence est de shape (7305,9)
+
+# dist = np.linalg.norm(donnees_planetes,axis=-1)
+# dist[:,5]=1
+
+
+# diff_par_dist = difference/dist
+
+# moyenne =diff_par_dist.mean(axis=-1)
 
 # # Création du DataFrame avec numérotation t
 # df = pd.DataFrame({
@@ -77,7 +84,7 @@ def calcul_traj(dt):
 # })
 
 # # Export en CSV
-# df.to_csv('Erreur_moyenne_dt=1.csv', index=False)
+# df.to_csv('Erreur_moyenne_par_dist_dt=1.csv', index=False)
 
 """Visualisation"""
 
@@ -94,7 +101,11 @@ ax.set_xlim(-1e9/2,1e9/2)
 ax.set_ylim(-1e9/2,1e9/2)
 ax.set_zlim(-1e9/2,1e9/2)
 
-ax.set_title("Simulation N-corps")
+ax.set_xlabel("x (km)")
+ax.set_ylabel("y (km)")
+ax.set_zlabel("z (km)")
+
+ax.set_title("Comparaison réel/théorique")
 ax.set_aspect("equal")
 
 points1 = []

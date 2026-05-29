@@ -1,4 +1,5 @@
-from config import*
+import fun_barnes_hut as fun
+import var_poo2_barnes_hut as var
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -19,7 +20,7 @@ for _ in range(var.t_max):
     #si on fait juste traj.append(var.sys), cela renvoie un pointeur tjr vers la même valeur
     traj.append(np.array([planete.pos.copy() for planete in var.planetes]))
     #fun.actual met a jour les coordonées, vitesses, accélérations, de chacune des planètes dans le tab var.sys auquel l'on ajoute des dimensions
-    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G)
+    save, continuer = fun.actual(var.planetes,var.t,var.res,var.i_sat,var.G,1000,0.5)
     #print(var.planetes[1].pos)
 
 # afficher la couleur de la planète vers laquelle le satellite est rentré en collision
