@@ -9,8 +9,10 @@ __pycache__/
 # On ne suit pas les images:
 *.png
 *.jpg
+*.jpeg
 *.gif
 
+*.txt
 # fichiers csv
 *.csv
 

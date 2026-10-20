@@ -37,8 +37,8 @@ class Simulation:
 
     def run_trajectoire(self, integrator):
         if integrator.nom !=  "parallel_integrator":
-            self._run_trajectoire_iter()
+            return self._run_trajectoire_iter(integrator)
         else:
-            self._run_trajectoire_parall()
+            return self._run_trajectoire_parall(integrator)
 
 

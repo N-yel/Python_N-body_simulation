@@ -41,7 +41,7 @@ scenar = Scenario(planetes=planetes,
                   haut=1000,
                   G=1,
                   t_max=10000,
-                  dt=0.1,
+                  dt=1,
                   res=1e-4,
                   i_sat=3,
                   nom="trois_corps"
